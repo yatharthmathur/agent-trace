@@ -6,7 +6,7 @@ Install target: **`pip install agenttrace`** (not published yet). This repo is t
 
 ## Status
 
-Repository bootstrap only. Product code comes in later slices. See [docs/mvp.md](docs/mvp.md).
+Repository bootstrap only. Product code comes in later slices. See [docs/mvp.md](docs/mvp.md). The first API will be `@trace`; logged fields are in [docs/trace-decorator.md](docs/trace-decorator.md).
 
 ## Layout
 
