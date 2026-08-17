@@ -1,34 +1,35 @@
 ---
 name: agenttrace-docker
-description: Docker Compose rules for AgentTrace development and tests. Use when running tests, changing Dockerfile/compose, or adding dependencies.
+description: Docker Compose rules for AgentTrace checks. Use when running lint/type-check, changing Dockerfile/compose.yaml, or documenting how to run the repo.
 ---
 
-# AgentTrace Docker dev environment
+# Docker
 
-The project must run tests on any machine that has Docker Compose. Do not assume a local Python version.
-
-## Supported command
+The supported cross-machine command is:
 
 ```bash
-docker compose run --rm test
+docker compose run --rm check
 ```
 
-That is the default test entrypoint. CI must use the same command.
+That syncs the uv environment from `uv.lock`, then runs Ruff (lint + format check) and ty.
 
 ## Rules
 
-- One Compose service for tests is enough. Do not add Postgres, Redis, Nginx, or a tracing collector.
-- Keep the Dockerfile based on `python:3.12-slim`.
-- Install the package with `pip install -e ".[dev]"` so tests import `agenttrace`.
-- Bind-mount the repo at `/app` in Compose so host edits are tested without rebuilding for every Python change. Rebuild when `pyproject.toml` or the Dockerfile changes.
-- `pytest` is the test runner. Do not switch to a different runner without an explicit request.
-- Any new runtime or test dependency belongs in `pyproject.toml`, not as an ad-hoc `pip install` in docs.
-- `.dockerignore` may skip `.git` and caches; it must not skip `tests/`, `schemas/`, or `src/`.
+- `compose.yaml` is the Compose file (not `docker-compose.yml`).
+- The image uses official uv (`ghcr.io/astral-sh/uv:0.12.5`) on `python:3.12-slim-trixie`. Pin uv; do not use `latest`.
+- Install with `uv sync --locked`. Never `pip install` inside the Dockerfile except via uv.
+- Bind-mount the repo at `/app` and keep an anonymous volume on `/app/.venv` so the host venv is not used.
+- Rebuild after `pyproject.toml` or `uv.lock` changes: `docker compose build`.
+- Do not add Postgres, Redis, Nginx, or other services.
+- This image is for **dev/check**, not for publishing. The artifact is the pip package.
 
-## Local data
+## Without Docker
 
-Traces persist in a SQLite file (default `agenttrace.db`). In containers, write it under a mounted working directory so it survives container exit. Do not introduce a Docker volume for a database server.
+If Docker is unavailable, the same checks are:
 
-## Cursor Cloud / other agents
-
-`install` in `.cursor/environment.json` should install `.[dev]` from the repo so agents can run pytest if Docker-in-Docker is unavailable. Prefer Compose when Docker is available. Do not add extra long-running `start` processes; this project has no server.
+```bash
+uv sync --all-groups
+uv run ruff check .
+uv run ruff format --check .
+uv run ty check src tests
+```

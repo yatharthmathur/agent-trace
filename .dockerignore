@@ -1,8 +1,13 @@
 .git
 .github
+.venv
+.pytest_cache
+.ruff_cache
+.ty_cache
+dist
 **/__pycache__
 **/*.pyc
 **/*.egg-info
-.pytest_cache
-.venv
+dist
+build
 agenttrace.db

@@ -1,13 +1,13 @@
-name: test
+name: check
 
 on:
   push:
   pull_request:
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run unit tests
-        run: docker compose run --rm test
+      - name: Lint and type-check
+        run: docker compose run --rm check

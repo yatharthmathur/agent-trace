@@ -1,10 +1,12 @@
 # AgentTrace agent notes
 
-This repo is a local flight recorder for AI agents, not a hosted platform.
+This repository is a **Python package** (`agenttrace`), not a hosted service.
 
-Before implementing:
+Current slice: repo bootstrap (layout, uv/ruff/ty, Docker). Do not add recorder, storage, CLI, or schemas until asked.
 
-1. Read [docs/mvp.md](docs/mvp.md) and [docs/architecture.md](docs/architecture.md).
-2. Follow the skills in `.cursor/skills/` — especially `agenttrace-mvp`, `agenttrace-tdd`, and `agenttrace-schema`.
-3. Do not add services, auth, evals, or a web platform.
-4. Write a failing unit test first. Run tests with `docker compose run --rm test`.
+Read:
+
+- [docs/mvp.md](docs/mvp.md) for product intent
+- `.cursor/skills/` for repo rules (packaging, typing, Docker, TDD, MVP scope)
+
+Run checks with `docker compose run --rm check` when Docker is available, otherwise `uv run ruff check . && uv run ruff format --check . && uv run ty check src tests`.

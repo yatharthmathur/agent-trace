@@ -1,23 +1,41 @@
 # AgentTrace
 
-Local flight recorder for AI agents: capture a run (models, tools, errors) and inspect it later.
+A Python package that records what an AI agent did — model calls, tools, errors — so you can inspect the run later.
 
-This repository is in **spec-first** shape. The MVP, architecture, and interchange schema are defined; the recorder SDK is the next implementation slice.
+Install target: **`pip install agenttrace`** (not published yet). This repo is the package source.
 
-- Product: [docs/mvp.md](docs/mvp.md)
-- Architecture: [docs/architecture.md](docs/architecture.md)
-- Export schema: [schemas/v1/trace.schema.json](schemas/v1/trace.schema.json)
+## Status
 
-## MVP in one paragraph
+Repository bootstrap only. Product code comes in later slices. See [docs/mvp.md](docs/mvp.md).
 
-A Python SDK writes nested LLM/tool/error spans into a local SQLite file. A CLI lists runs, prints a run as a tree, and exports schema-valid JSON. No server, no accounts, no eval platform.
+## Layout
 
-## Development
-
-Docker is the supported way to run tests. You only need Docker Compose.
-
-```bash
-docker compose run --rm test
+```
+src/agenttrace/   # installable package (PEP 561 typed)
+tests/            # unit tests (added when behavior exists)
+docs/             # product notes, not code
 ```
 
-On a bind-mounted checkout this installs the package in editable mode and runs pytest. See `.cursor/skills/agenttrace-docker` and `.cursor/skills/agenttrace-tdd`.
+Requires **Python 3.10+**. Local default is 3.12 (`.python-version`).
+
+## Tooling
+
+Use **uv** and **ruff**. Type-check with **ty**. Do not add Poetry, pip-tools, Black, isort, flake8, or mypy.
+
+```bash
+uv sync
+uv run ruff check .
+uv run ruff format .
+uv run ty check src tests
+uv run pytest
+```
+
+## Docker
+
+Docker is the supported way to run the same checks on any machine:
+
+```bash
+docker compose run --rm check
+```
+
+That runs Ruff (lint + format check) and ty against the tree.
