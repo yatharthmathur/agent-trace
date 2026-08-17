@@ -6,7 +6,7 @@ Install target: **`pip install agenttrace`** (not published yet). This repo is t
 
 ## Status
 
-Repository bootstrap only. Product code comes in later slices. See [docs/mvp.md](docs/mvp.md). The first API will be `@trace`; logged fields are in [docs/trace-decorator.md](docs/trace-decorator.md).
+Provider identification is in `agenttrace.provider`. `@trace` comes later; logged fields are in [docs/trace-decorator.md](docs/trace-decorator.md). See [docs/mvp.md](docs/mvp.md).
 
 ## Layout
 
@@ -41,4 +41,4 @@ Docker is the supported way to run the same checks on any machine:
 docker compose run --rm check
 ```
 
-That runs Ruff (lint + format check) and ty against the tree.
+That runs Ruff, ty, and pytest against the tree.

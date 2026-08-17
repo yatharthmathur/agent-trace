@@ -10,6 +10,7 @@ The first public API is:
 ```python
 from agenttrace import trace
 
+
 @trace
 def ask_model(messages: list[dict[str, str]], model: str = "gpt-4.1"):
     return client.chat.completions.create(model=model, messages=messages)

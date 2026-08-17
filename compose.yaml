@@ -8,4 +8,4 @@ services:
     command:
       - /bin/sh
       - -c
-      - uv sync --locked --all-groups && uv run ruff check . && uv run ruff format --check . && uv run ty check src tests
+      - uv sync --locked --all-groups && uv run ruff check . && uv run ruff format --check . && uv run ty check src tests && uv run pytest

@@ -9,9 +9,7 @@ AgentTrace is a **Python library** (`pip install agenttrace`) that records one a
 
 ## Current slice
 
-Repository bootstrap only: `src/` package layout, uv/ruff/ty, Docker, boilerplate.
-
-Do **not** add recorder APIs, SQLite, CLI commands, JSON schemas, or sample agent apps until the user asks for the next slice.
+Provider identification (`identify_provider`). Do not add `@trace`, SQLite, or CLI until asked.
 
 ## Always do
 

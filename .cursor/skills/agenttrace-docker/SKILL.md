@@ -11,7 +11,7 @@ The supported cross-machine command is:
 docker compose run --rm check
 ```
 
-That syncs the uv environment from `uv.lock`, then runs Ruff (lint + format check) and ty.
+That syncs the uv environment from `uv.lock`, then runs Ruff (lint + format check), ty, and pytest.
 
 ## Rules
 
@@ -32,4 +32,5 @@ uv sync --all-groups
 uv run ruff check .
 uv run ruff format --check .
 uv run ty check src tests
+uv run pytest
 ```

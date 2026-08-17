@@ -40,12 +40,14 @@ What a traced call stores: [docs/trace-decorator.md](trace-decorator.md).
 
 ## How we will build it
 
-Work **one slice at a time**. The current slice is repository bootstrap:
+Work **one slice at a time**. Current slice: identify the provider from a response object.
 
 1. Package layout, uv/ruff/ty, Docker, boilerplate
-2. Recorder API (when asked)
-3. Persistence
-4. CLI
+2. Provider identification (`identify_provider`) — in progress
+3. Extract LLM fields using the provider schema
+4. `@trace` decorator
+5. Persistence
+6. CLI
 
 Do not skip ahead.
 

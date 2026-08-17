@@ -5,6 +5,7 @@ Bread-and-butter API:
 ```python
 from agenttrace import trace
 
+
 @trace
 def ask_model(messages: list[dict[str, str]], model: str = "gpt-4.1"):
     return client.chat.completions.create(model=model, messages=messages)
@@ -69,7 +70,7 @@ Do not store the `client` object, bound methods, or raw HTTP handles. Drop kwarg
 
 ### 2. LLM fields (when recognizable)
 
-Extract from a known response type **and** from args/kwargs when those names are present (`model`, `messages`, `tools`). Prefer extracted fields over dumping the whole SDK object as the only view.
+First call `identify_provider(return_value)` ([docs/provider-identification.md](provider-identification.md)). Then extract using that provider's schema. If identification returns `None`, skip this layer.
 
 | Field | Source (OpenAI chat) | Source (Anthropic messages) |
 | --- | --- | --- |
