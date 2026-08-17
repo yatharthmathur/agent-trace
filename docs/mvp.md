@@ -21,10 +21,13 @@ If a proposed feature needs accounts, a server farm, or a product catalog (evals
 
 ## In scope (later slices)
 
-- Explicit Python SDK to start/end a run and record nested LLM/tool work
+- `@trace` decorator as the first API (`from agenttrace import trace`)
+- Record nested calls as a span tree; extract LLM fields from known SDK responses
 - Persist a run locally (SQLite is the likely default)
 - CLI to list, show, and export a run
 - Failures as first-class data, not lost stdout
+
+What a traced call stores: [docs/trace-decorator.md](trace-decorator.md).
 
 ## Out of scope
 

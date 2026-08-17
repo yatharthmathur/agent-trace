@@ -7,6 +7,7 @@ Current slice: repo bootstrap (layout, uv/ruff/ty, Docker). Do not add recorder,
 Read:
 
 - [docs/mvp.md](docs/mvp.md) for product intent
+- [docs/trace-decorator.md](docs/trace-decorator.md) for `@trace` and what it logs
 - `.cursor/skills/` for repo rules (packaging, typing, Docker, TDD, MVP scope)
 
 Run checks with `docker compose run --rm check` when Docker is available, otherwise `uv run ruff check . && uv run ruff format --check . && uv run ty check src tests`.

@@ -16,6 +16,7 @@ Do **not** add recorder APIs, SQLite, CLI commands, JSON schemas, or sample agen
 ## Always do
 
 - Treat [docs/mvp.md](docs/mvp.md) as the product source of truth.
+- `@trace` is the first public API. Field rules live in `agenttrace-trace-api` and [docs/trace-decorator.md](docs/trace-decorator.md).
 - Keep the system a library + optional CLI, not a server.
 - If a request would add a new product surface (UI, auth, evals), say so and wait for an explicit scope change.
 
