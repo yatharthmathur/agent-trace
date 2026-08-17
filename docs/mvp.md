@@ -52,5 +52,5 @@ Do not skip ahead.
 | --- | --- |
 | Distribution | Installable Python package `agenttrace` (`src/` layout) |
 | Python | `>=3.10` (3.9 is EOL; ty supports 3.10+) |
-| Tooling | uv, ruff, ty, pytest |
+| Tooling | uv, ruff, ty, pytest, pre-commit |
 | Dev environment | Docker Compose `check` service |

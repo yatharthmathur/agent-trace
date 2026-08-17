@@ -24,11 +24,14 @@ Use **uv** and **ruff**. Type-check with **ty**. Do not add Poetry, pip-tools, B
 
 ```bash
 uv sync
+uv run pre-commit install
 uv run ruff check .
 uv run ruff format .
 uv run ty check src tests
 uv run pytest
 ```
+
+`pre-commit` runs `ruff check` on staged files. After `uv sync`, install the hook once with `uv run pre-commit install`.
 
 ## Docker
 

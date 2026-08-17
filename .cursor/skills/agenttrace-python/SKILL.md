@@ -13,6 +13,7 @@ AgentTrace is an installable package named `agenttrace`. Import it as `agenttrac
 | --- | --- |
 | Package/env/lock | uv |
 | Lint + format | ruff |
+| Git hook | pre-commit (`ruff-check`) |
 | Types | ty |
 | Tests | pytest |
 
@@ -25,6 +26,7 @@ uv sync
 uv add <package>                 # runtime
 uv add --dev <package>           # dev only
 uv lock
+uv run pre-commit install
 uv run ruff check .
 uv run ruff format .
 uv run ty check src tests
@@ -32,6 +34,8 @@ uv run pytest
 ```
 
 Commit `uv.lock`. Never edit it by hand.
+
+Keep `.pre-commit-config.yaml` `rev` on `astral-sh/ruff-pre-commit` equal to the Ruff version in `uv.lock` (currently `v0.16.3`). The hook is `ruff-check` only; do not add extra hooks unless asked.
 
 ## Python versions
 

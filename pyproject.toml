@@ -37,6 +37,7 @@ packages = ["src/agenttrace"]
 
 [dependency-groups]
 dev = [
+  "pre-commit>=4.6.2",
   "pytest>=8.3",
   "ruff>=0.12",
   "ty>=0.0.10",
