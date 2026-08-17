@@ -1,0 +1,118 @@
+{
+  "schema_version": "1.0.0",
+  "run": {
+    "id": "11111111-1111-4111-8111-111111111111",
+    "name": "support-agent",
+    "status": "succeeded",
+    "started_at": "2026-08-17T13:00:00Z",
+    "ended_at": "2026-08-17T13:00:08Z",
+    "metadata": {
+      "agent": "support",
+      "version": "0.1"
+    }
+  },
+  "spans": [
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "run_id": "11111111-1111-4111-8111-111111111111",
+      "parent_id": null,
+      "kind": "agent",
+      "name": "handle-ticket",
+      "status": "ok",
+      "started_at": "2026-08-17T13:00:00Z",
+      "ended_at": "2026-08-17T13:00:08Z",
+      "attributes": {},
+      "input": {
+        "ticket": "Why was my order delayed?"
+      },
+      "output": {
+        "reply": "Your order shipped yesterday."
+      },
+      "error": null,
+      "truncated": false
+    },
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "run_id": "11111111-1111-4111-8111-111111111111",
+      "parent_id": "22222222-2222-4222-8222-222222222222",
+      "kind": "llm",
+      "name": "plan",
+      "status": "ok",
+      "started_at": "2026-08-17T13:00:00Z",
+      "ended_at": "2026-08-17T13:00:02Z",
+      "attributes": {
+        "provider": "openai",
+        "model": "gpt-4.1",
+        "input_tokens": 120,
+        "output_tokens": 40,
+        "finish_reason": "stop"
+      },
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Why was my order delayed?"
+          }
+        ]
+      },
+      "output": {
+        "text": "Search shipping status, then answer."
+      },
+      "error": null,
+      "truncated": false
+    },
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "run_id": "11111111-1111-4111-8111-111111111111",
+      "parent_id": "22222222-2222-4222-8222-222222222222",
+      "kind": "tool",
+      "name": "lookup-shipment",
+      "status": "ok",
+      "started_at": "2026-08-17T13:00:02Z",
+      "ended_at": "2026-08-17T13:00:03Z",
+      "attributes": {
+        "tool_name": "get_shipment",
+        "tool_call_id": "call_1"
+      },
+      "input": {
+        "order_id": "A-100"
+      },
+      "output": {
+        "status": "shipped",
+        "shipped_at": "2026-08-16T18:00:00Z"
+      },
+      "error": null,
+      "truncated": false
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555555",
+      "run_id": "11111111-1111-4111-8111-111111111111",
+      "parent_id": "22222222-2222-4222-8222-222222222222",
+      "kind": "llm",
+      "name": "answer",
+      "status": "ok",
+      "started_at": "2026-08-17T13:00:03Z",
+      "ended_at": "2026-08-17T13:00:08Z",
+      "attributes": {
+        "provider": "openai",
+        "model": "gpt-4.1",
+        "input_tokens": 200,
+        "output_tokens": 60,
+        "finish_reason": "stop"
+      },
+      "input": {
+        "messages": [
+          {
+            "role": "tool",
+            "content": "shipped yesterday"
+          }
+        ]
+      },
+      "output": {
+        "text": "Your order shipped yesterday."
+      },
+      "error": null,
+      "truncated": false
+    }
+  ]
+}

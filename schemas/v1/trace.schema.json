@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenttrace.dev/schemas/v1/trace.schema.json",
+  "title": "AgentTrace run export",
+  "description": "A complete recorded agent run: one run object plus its span tree.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run", "spans"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "run": {
+      "$ref": "#/$defs/run"
+    },
+    "spans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/span"
+      }
+    }
+  },
+  "$defs": {
+    "rfc3339": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "jsonValue": {
+      "description": "Any JSON value. Objects and arrays are preferred for structured payloads."
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "message"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string"
+        },
+        "stack": {
+          "type": ["string", "null"]
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "status",
+        "started_at",
+        "ended_at",
+        "metadata"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["running", "succeeded", "failed"]
+        },
+        "started_at": {
+          "$ref": "#/$defs/rfc3339"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/rfc3339"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "run_id",
+        "parent_id",
+        "kind",
+        "name",
+        "status",
+        "started_at",
+        "ended_at",
+        "attributes",
+        "input",
+        "output",
+        "error",
+        "truncated"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "run_id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "parent_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["llm", "tool", "agent"]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["ok", "error"]
+        },
+        "started_at": {
+          "$ref": "#/$defs/rfc3339"
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/rfc3339"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "input": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "output": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/error"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "error"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "$ref": "#/$defs/error"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ok"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "llm"
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "required": ["provider", "model"],
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "model": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "input_tokens": {
+                    "type": ["integer", "null"],
+                    "minimum": 0
+                  },
+                  "output_tokens": {
+                    "type": ["integer", "null"],
+                    "minimum": 0
+                  },
+                  "finish_reason": {
+                    "type": ["string", "null"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "tool"
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "attributes": {
+                "type": "object",
+                "required": ["tool_name"],
+                "properties": {
+                  "tool_name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "tool_call_id": {
+                    "type": ["string", "null"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

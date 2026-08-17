@@ -1,0 +1,4 @@
+{
+  "name": "agenttrace",
+  "install": "pip install -e '.[dev]'"
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0.0",
+  "run": {
+    "id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "name": "support-agent",
+    "status": "failed",
+    "started_at": "2026-08-17T14:00:00Z",
+    "ended_at": "2026-08-17T14:00:04Z",
+    "metadata": {}
+  },
+  "spans": [
+    {
+      "id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "run_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "parent_id": null,
+      "kind": "llm",
+      "name": "plan",
+      "status": "ok",
+      "started_at": "2026-08-17T14:00:00Z",
+      "ended_at": "2026-08-17T14:00:01Z",
+      "attributes": {
+        "provider": "anthropic",
+        "model": "claude-sonnet-4-5",
+        "input_tokens": 80,
+        "output_tokens": 20,
+        "finish_reason": "stop"
+      },
+      "input": {
+        "messages": [
+          {
+            "role": "user",
+            "content": "Look up order A-100"
+          }
+        ]
+      },
+      "output": {
+        "text": "Call get_shipment"
+      },
+      "error": null,
+      "truncated": false
+    },
+    {
+      "id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "run_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "parent_id": null,
+      "kind": "tool",
+      "name": "lookup-shipment",
+      "status": "error",
+      "started_at": "2026-08-17T14:00:01Z",
+      "ended_at": "2026-08-17T14:00:04Z",
+      "attributes": {
+        "tool_name": "get_shipment",
+        "tool_call_id": "call_9"
+      },
+      "input": {
+        "order_id": "A-100"
+      },
+      "output": null,
+      "error": {
+        "type": "TimeoutError",
+        "message": "get_shipment timed out after 3s",
+        "stack": "TimeoutError: get_shipment timed out after 3s"
+      },
+      "truncated": false
+    }
+  ]
+}
