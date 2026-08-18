@@ -60,8 +60,8 @@ Three layers. Always write layer 1. Write layer 2 when the return value (or args
 | `qualname` | Module + function, for disambiguation |
 | `kind` | `llm` if we extracted LLM fields, else `call` |
 | `status` | `ok` or `error` |
-| `started_at` / `ended_at` | UTC RFC 3339 |
-| `duration_ms` | Latency |
+| `started_at` / `ended_at` | UTC RFC 3339 with microseconds (e.g. `2026-08-18T08:31:00.123456Z`) |
+| `duration_ms` | Wall-clock latency as a float (`ended_at - started_at`) |
 | `input` | JSON snapshot of args + kwargs (see serialization) |
 | `output` | JSON snapshot of the return value, or `null` on error |
 | `truncated` | True if input/output was cut |
@@ -124,7 +124,9 @@ For the canonical `ask_model(messages, model=...)` that returns a `ChatCompletio
   "name": "ask_model",
   "kind": "llm",
   "status": "ok",
-  "duration_ms": 1840,
+  "started_at": "2026-08-18T08:31:00.000000Z",
+  "ended_at": "2026-08-18T08:31:01.840000Z",
+  "duration_ms": 1840.0,
   "input": {
     "model": "gpt-4.1",
     "messages": [
@@ -137,7 +139,8 @@ For the canonical `ask_model(messages, model=...)` that returns a `ChatCompletio
     "output_text": "Your order shipped yesterday.",
     "finish_reason": "stop",
     "input_tokens": 24,
-    "output_tokens": 8
+    "output_tokens": 8,
+    "reasoning_tokens": null
   },
   "provider": "openai"
 }
