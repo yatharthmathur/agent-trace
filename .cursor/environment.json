@@ -1,0 +1,4 @@
+{
+  "name": "agenttrace",
+  "install": "curl -LsSf https://astral.sh/uv/install.sh | sh && . $HOME/.local/bin/env && uv sync --locked --all-groups"
+}
