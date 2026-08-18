@@ -19,10 +19,31 @@ OpenRouter is usually the OpenAI Python SDK pointed at `https://openrouter.ai/ap
 | OpenRouter | chat.completion shape and (`native_finish_reason` or `usage.cost` / `cost_details` / `is_byok` or `id` starts with `gen-` or `model` contains `/`) | Anthropic `type: message` |
 | OpenAI | `object` in `chat.completion`, `chat.completion.chunk`, `response`; or module `openai.*` without OpenRouter extras | OpenRouter extras |
 
-Unknown values return `None`. Field extraction (messages, tokens, text) is a later util, keyed off this result.
+Unknown values return `None`. Field extraction (messages, tokens, text) is keyed off this result.
 
 ```python
-from agenttrace.provider import Provider, identify_provider
+from agenttrace.provider import Provider, get_reasoning_tokens, identify_provider
 
 identify_provider(completion)  # Provider.OPENAI | OPENROUTER | ANTHROPIC | None
+get_reasoning_tokens(Provider.OPENAI, completion)  # int | None
 ```
+
+## Reasoning / thinking tokens
+
+Extracted by `get_reasoning_tokens(provider, response)`. Returns the raw integer
+count (0 is a valid value — model ran but used no reasoning budget), or `None`
+when the field is absent (thinking not enabled or unsupported model).
+
+| Provider | API surface | Field path |
+| --- | --- | --- |
+| OpenAI | Chat Completions | `usage.completion_tokens_details.reasoning_tokens` |
+| OpenAI | Responses API | `usage.output_tokens_details.reasoning_tokens` |
+| Anthropic | Messages (extended/adaptive thinking) | `usage.output_tokens_details.thinking_tokens` |
+| OpenRouter | Chat Completions (passes through) | `usage.completion_tokens_details.reasoning_tokens` |
+
+OpenAI checks `completion_tokens_details` first (Chat Completions), then
+`output_tokens_details` (Responses API), so one call handles both surfaces.
+
+Billing note: Anthropic charges for the **full** thinking tokens generated
+internally, not the (possibly summarized) content visible in the response.
+The field always reflects what you were billed for.

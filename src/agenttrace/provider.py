@@ -23,6 +23,53 @@ class Provider(str, Enum):
     OPENROUTER = "openrouter"
 
 
+def get_reasoning_tokens(provider: Provider, value: object) -> int | None:
+    """Return the thinking/reasoning token count from a response, or None.
+
+    Each provider exposes this at a different nested path:
+
+    - OpenAI Chat Completions:
+        usage.completion_tokens_details.reasoning_tokens
+    - OpenAI Responses API:
+        usage.output_tokens_details.reasoning_tokens
+    - Anthropic (extended / adaptive thinking):
+        usage.output_tokens_details.thinking_tokens
+    - OpenRouter (passes through upstream value):
+        usage.completion_tokens_details.reasoning_tokens
+
+    Returns 0 when the model ran but spent no reasoning budget.
+    Returns None when the field is absent (thinking not enabled or not supported).
+    """
+    usage = _get(value, "usage")
+    if usage is None:
+        return None
+
+    if provider is Provider.ANTHROPIC:
+        output_details = _get(usage, "output_tokens_details")
+        return _int_or_none(_get(output_details, "thinking_tokens"))
+
+    if provider in (Provider.OPENAI, Provider.OPENROUTER):
+        # Chat Completions / OpenRouter path
+        completion_details = _get(usage, "completion_tokens_details")
+        if completion_details is not None:
+            result = _int_or_none(_get(completion_details, "reasoning_tokens"))
+            if result is not None:
+                return result
+        # Responses API path (object == "response")
+        output_details = _get(usage, "output_tokens_details")
+        return _int_or_none(_get(output_details, "reasoning_tokens"))
+
+    return None
+
+
+def _int_or_none(value: object) -> int | None:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    return None
+
+
 def identify_provider(value: object) -> Provider | None:
     """Return the provider for an SDK object or JSON-like mapping, if known."""
     if value is None or isinstance(value, (str, bytes, int, float, bool)):
